@@ -4,6 +4,9 @@ from rich.panel import Panel
 
 console = Console()
 
+from rich.align import Align
+from rich.text import Text
+
 WELCOME_ASCII = r"""
  ________  _______   _______   ________          ________  ___       ___     
 |\   ____\|\  ___ \ |\  ___ \ |\   ___ \        |\   ____\|\  \     |\  \    
@@ -16,8 +19,16 @@ WELCOME_ASCII = r"""
 """
 
 def display_welcome():
-    """Displays the welcome banner with ASCII art."""
-    console.print(Panel(f"[bold green]{WELCOME_ASCII}[/bold green]", border_style="green", title="SeedCLI Architect", subtitle="Your intelligent project bootstrapper"))
+    """Displays the welcome banner with centered rainbow ASCII art."""
+    lines = WELCOME_ASCII.strip().split("\n")
+    colors = ["red", "orange1", "yellow", "green", "blue", "magenta", "violet"]
+    
+    rainbow_text = Text()
+    for i, line in enumerate(lines):
+        color = colors[i % len(colors)]
+        rainbow_text.append(line + "\n", style=f"bold {color}")
+    
+    console.print(Panel(Align.center(rainbow_text), border_style="green", title="SeedCLI Architect", subtitle="Your intelligent project bootstrapper"))
     console.print("\n")
 
 def get_action_choice() -> str:
