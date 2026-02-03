@@ -1,0 +1,11 @@
+name: seed_cli
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - questionary
+      - rich
+      - pyinstaller
