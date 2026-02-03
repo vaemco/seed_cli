@@ -37,6 +37,14 @@
 
 ---
 
+## Demo
+
+<div align="center">
+  <img src="public/seed_demo.svg" alt="SeedCLI Demo" width="100%">
+</div>
+
+---
+
 ## Prerequisites
 
 You need **Mamba** or **Conda** to manage the environment easily.
