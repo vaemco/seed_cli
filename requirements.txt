@@ -1,0 +1,4 @@
+pathlib
+questionary
+rich
+pyinstaller
