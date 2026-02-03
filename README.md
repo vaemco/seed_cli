@@ -145,6 +145,28 @@ The tool promotes a modular and clean architecture:
 
 ---
 
+## Troubleshooting
+
+### EOFError / Interactive Questions Not Working (macOS/Linux)
+
+If you see an `EOFError` when the CLI asks a question, checking `mamba run` behavior is necessary. Some interactive shells do not handle standard input correctly through `mamba run`.
+
+**Solution:**
+Update your alias to point directly to the python executable in the environment.
+
+1.  Find the path:
+    ```bash
+    mamba run -n seed_cli which python
+    ```
+    *(Example output: `/opt/homebrew/Caskroom/mambaforge/base/envs/seed_cli/bin/python`)*
+
+2.  Update your alias:
+    ```bash
+    alias seed='/YOUR/ABSOLUTE/PATH/TO/python "/path/to/repo/src/main.py"'
+    ```
+
+---
+
 ## License
 
 MIT License
