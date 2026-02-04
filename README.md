@@ -29,10 +29,13 @@
 - **Interactive Menus**: Navigate with arrow keys.
 - **Visual Feedback**: Beautiful terminal output with progress bars and colors.
 - **Smart Templates**:
-  - **Data Science**: `data/raw`, `notebooks`, `src/features`
-  - **Machine Learning**: `models`, `metrics`, `training_logs`
-  - **Web (Bun)**: `public`, `src/components`, `src/pages`
-  - **FastAPI**: `app/api`, `app/services`, `app/core`
+  - **Data Science**: `data/raw`, `notebooks`, `src/features`, `reports`
+  - **Machine Learning**: `models`, `metrics`, `training`, `deployment`
+  - **Web (Bun)**: `public`, `src/components`, `src/pages`, `hooks`
+  - **FastAPI**: `app/api`, `app/services`, `app/core`, `postgres`
+  - **Streamlit**: `pages`, `assets`, `utils`
+  - **React (Vite)**: `public`, `src/components`, `src/hooks`, `src/contexts`
+  - **Local Server**: `routes`, `controllers`, `middleware`
   - **Automation**: `config`, `logs`, `utils`
 
 ---
@@ -155,10 +158,12 @@ If you see an `EOFError` when the CLI asks a question, checking `mamba run` beha
 Update your alias to point directly to the python executable in the environment.
 
 1.  Find the path:
+
     ```bash
     mamba run -n seed_cli which python
     ```
-    *(Example output: `/opt/homebrew/Caskroom/mambaforge/base/envs/seed_cli/bin/python`)*
+
+    _(Example output: `/opt/homebrew/Caskroom/mambaforge/base/envs/seed_cli/bin/python`)_
 
 2.  Update your alias:
     ```bash
