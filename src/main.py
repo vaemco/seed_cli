@@ -24,14 +24,22 @@ def main():
 
     elif action == "Clone Repository":
         repo_url = interface.get_repo_url()
-        project_name = interface.get_project_name()
         
-        if not repo_url or not project_name:
+        if not repo_url:
             console.print("[bold red]Operation cancelled.[/bold red]")
             return
 
-        target_dir = Path.cwd() / project_name
-        generator.clone_repository(repo_url, target_dir)
+        # Clone first, let it infer the name
+        target_dir = generator.clone_repository(repo_url)
+        
+        if target_dir and target_dir.exists():
+            # Now ask for scaffolding
+            project_type = interface.get_project_type(list(templates.PROJECT_TEMPLATES.keys()))
+            if project_type:
+                 structure = templates.PROJECT_TEMPLATES.get(project_type, [])
+                 files = templates.DEFAULT_FILES.get(project_type, [])
+                 # Use the folder name as the project name for README purposes
+                 generator.create_structure(target_dir, structure, target_dir.name, files)
 
     elif action == "Create New Project":
         project_type = interface.get_project_type(list(templates.PROJECT_TEMPLATES.keys()))
@@ -51,7 +59,8 @@ def main():
                  return
 
         structure = templates.PROJECT_TEMPLATES.get(project_type, [])
-        generator.create_structure(target_dir, structure, project_name)
+        files = templates.DEFAULT_FILES.get(project_type, [])
+        generator.create_structure(target_dir, structure, project_name, files)
 
 if __name__ == "__main__":
     main()

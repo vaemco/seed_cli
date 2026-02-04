@@ -28,3 +28,4 @@ data/
 # Agent
 .agent/rules
 docs/
+.DS_Store

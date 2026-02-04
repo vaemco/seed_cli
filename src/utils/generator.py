@@ -8,7 +8,7 @@ from src.config.templates import README_CONTENT, GITIGNORE_CONTENT
 
 console = Console()
 
-def create_structure(base_path: Path, directories: List[str], project_name: str):
+def create_structure(base_path: Path, directories: List[str], project_name: str, files: List[str] = None):
     """
     Creates the project directory structure and basic files.
     
@@ -16,13 +16,16 @@ def create_structure(base_path: Path, directories: List[str], project_name: str)
         base_path (Path): The root path of the new project.
         directories (List[str]): List of relative paths to create.
         project_name (str): Name of the project for the README.
+        files (List[str], optional): List of relative file paths to create.
     """
+    total_steps = len(directories) + 3 + (len(files) if files else 0)
+    
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
         transient=True,
     ) as progress:
-        task = progress.add_task(description=f"Creating project at {base_path}...", total=len(directories) + 3)
+        task = progress.add_task(description=f"Creating project at {base_path}...", total=total_steps)
         
         #  base directory
         if not base_path.exists():
@@ -36,6 +39,17 @@ def create_structure(base_path: Path, directories: List[str], project_name: str)
             (full_path / ".gitkeep").touch()
             progress.advance(task)
             
+        #  Default Files
+        if files:
+            for file_path in files:
+                full_file_path = base_path / file_path
+                # Ensure parent directory exists (handle nested files like app/main.py)
+                if not full_file_path.parent.exists():
+                    full_file_path.parent.mkdir(parents=True, exist_ok=True)
+                
+                full_file_path.touch()
+                progress.advance(task)
+
         #  README.md
         readme_path = base_path / "README.md"
         with open(readme_path, "w", encoding="utf-8") as f:
@@ -50,19 +64,31 @@ def create_structure(base_path: Path, directories: List[str], project_name: str)
 
     console.print(f"[bold green]Project structure created successfully at {base_path}[/bold green]")
 
-def clone_repository(repo_url: str, target_dir: Path):
+def clone_repository(repo_url: str, target_dir: Path = None) -> Path:
     """
     Clones a git repository.
     
     Args:
         repo_url (str): HTTPS URL of the git repository.
-        target_dir (Path): Destination directory.
+        target_dir (Path, optional): Destination directory. If None, infers from URL.
+        
+    Returns:
+        Path: The path to the cloned repository.
     """
-    console.print(f"[bold blue]Cloning {repo_url}...[/bold blue]")
+    if target_dir is None:
+        repo_name = repo_url.rstrip("/").split("/")[-1]
+        if repo_name.endswith(".git"):
+            repo_name = repo_name[:-4]
+        target_dir = Path.cwd() / repo_name
+
+    console.print(f"[bold blue]Cloning {repo_url} into {target_dir}...[/bold blue]")
     try:
         subprocess.run(["git", "clone", repo_url, str(target_dir)], check=True)
         console.print("[bold green]Repository cloned successfully![/bold green]")
+        return target_dir
     except subprocess.CalledProcessError:
         console.print("[bold red]Failed to clone repository.[/bold red]")
+        return None
     except FileNotFoundError:
         console.print("[bold red]Git command not found. Is git installed?[/bold red]")
+        return None
